@@ -8,7 +8,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var exphbs = require('express-handlebars');
-var expressValidator = require('express-validator');
+const { validationResult } = require('express-validator');
 var flash = require('connect-flash');
 var session = require('express-session');
 var passport = require('passport');
@@ -37,7 +37,7 @@ const options = {
   useCreateIndex: true,
   useFindAndModify: false,
   autoIndex: false, // Don't build indexes
-  reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
+  reconnectTries: 5, // Never stop trying to reconnect
   reconnectInterval: 500, // Reconnect every 500ms
   poolSize: 10, // Maintain up to 10 socket connections
   // If not connected, return errors immediately rather than waiting for reconnect
@@ -118,7 +118,7 @@ app.use(cookieParser());
 // Set Static Folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Express Session
+//   Session
 var expiryDate = new Date(Date.now() + 60 * 60 * 1000) // 1 hour
 app.use(session({
   secret: 'rand0ms3cr3tSession',
@@ -131,8 +131,10 @@ app.use(session({
 }));
 
 // Express Validator
-app.use(expressValidator({
-  errorFormatter: function (param, msg, value) {
+const myValidationResult = validationResult.withDefaults({
+  // todo: use it
+  // https://express-validator.github.io/docs/validation-result-api.html
+  formatter: (error) => {
     var namespace = param.split('.'),
       root = namespace.shift(),
       formParam = root;
@@ -141,12 +143,15 @@ app.use(expressValidator({
       formParam += '[' + namespace.shift() + ']';
     }
     return {
-      param: formParam,
-      msg: msg,
-      value: value
-    };
+      "msg": "The error message",
+      "param": "param.name.with.index[0]",
+      "value": "param value",
+      // Location of the param that generated this error.
+      // It's either body, query, params, cookies or headers.
+      "location": "body"
+    }
   }
-}));
+});
 
 // Passport init
 app.use(passport.initialize());
