@@ -28,13 +28,13 @@
     "express-handlebars": "latest",
     "express-messages": "latest",
     "express-session": "latest",
-    "express-validator": "latest",
+    "express-validator": "^6.1.1",
+    "helmet": "latest",
     "mongodb": "latest",
     "mongoose": "latest",
     "passport": "latest",
     "passport-http": "latest",
-    "passport-local": "latest",
-    "helmet": "latest"
+    "passport-local": "latest"
   },
   "devDependencies": {}
 }
