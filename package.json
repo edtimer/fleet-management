@@ -28,7 +28,7 @@
     "express-handlebars": "latest",
     "express-messages": "latest",
     "express-session": "latest",
-    "express-validator": "^4.3.0",
+    "express-validator": "^6.0.0",
     "helmet": "latest",
     "mongodb": "latest",
     "mongoose": "latest",
