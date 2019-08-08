@@ -17,11 +17,6 @@ router.get('/login', function (req, res) {
 
 // Register User
 router.post('/register', function (req, res) {
-	var name = req.body.name;
-	var email = req.body.email;
-	var username = req.body.username;
-	var password = req.body.password;
-	var password2 = req.body.password2;
 
 	// Validation
 	req.checkBody('name', 'Name is required').notEmpty();
@@ -38,32 +33,42 @@ router.post('/register', function (req, res) {
 			errors: errors
 		});
 	} else {
-		User.findOne({username: username}).exec().then((foundUser) => {
-			if(username != foundUser.username) {
+		User.findOne({ username: req.body.username }).exec().then((foundUser) => {
+			var username = req.body.username;
+
+			if (foundUser) {
+				if (username != foundUser) {
+					console.log('Username ' + username + ' already exists.');
+					req.flash('error_msg', 'Username ' + username + ' already exists.');
+					res.redirect('/users/login');
+				} else {
+					req.flash('error_msg', 'An error occured.');
+					res.redirect('/users/register');
+				}
+			} else if (username) {
 				var newUser = new User({
-					name: name,
-					email: email,
-					username: username,
-					password: password
+					name: req.body.name,
+					email: req.body.email,
+					username: req.body.username,
+					password: req.body.password
+				});
+				User.createUser(newUser, function (err, user) {
+					console.log("New User: " + user);
+					if (err) {
+						req.flash('error_msg', "An error occured.");
+						res.redirect('/users/register');
+					}
 				});
 
-				User.createUser(newUser, function (err, user) {
-					if (err) throw err;
-					console.log("Error: " + err);
-					console.log("User: " + user);
-				});
-		
 				req.flash('success_msg', 'You are registered and can now login');
 				res.redirect('/users/login');
 			} else {
-				console.log('Username ' + username + ' already exists.');
-				req.flash('error_msg', 'Username ' + username + ' already exists.');
-				res.redirect('/users/login');
+				req.flash('error_msg', 'An error occured.');
+				res.redirect('/users/register');
 			}
 		}).catch((err) => {
-			console.log(err);
-			req.flash('error_msg', err);
-			res.redirect('/users/login');
+			req.flash('error_msg', "An error occured.");
+			res.redirect('/users/register');
 		});
 	}
 });

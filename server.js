@@ -8,12 +8,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var exphbs = require('express-handlebars');
-const { validationResult } = require('express-validator');
+var expressValidator = require('express-validator');
 var flash = require('connect-flash');
 var session = require('express-session');
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var mongo = require('mongodb').MongoClient;
+// var LocalStrategy = require('passport-local').Strategy;
+// var mongo = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
 var helmet = require('helmet');
 //var assert = require('assert');
@@ -131,27 +131,7 @@ app.use(session({
 }));
 
 // Express Validator
-const myValidationResult = validationResult.withDefaults({
-  // todo: use it
-  // https://express-validator.github.io/docs/validation-result-api.html
-  formatter: (error) => {
-    var namespace = param.split('.'),
-      root = namespace.shift(),
-      formParam = root;
-
-    while (namespace.length) {
-      formParam += '[' + namespace.shift() + ']';
-    }
-    return {
-      "msg": "The error message",
-      "param": "param.name.with.index[0]",
-      "value": "param value",
-      // Location of the param that generated this error.
-      // It's either body, query, params, cookies or headers.
-      "location": "body"
-    }
-  }
-});
+app.use(expressValidator());
 
 // Passport init
 app.use(passport.initialize());
