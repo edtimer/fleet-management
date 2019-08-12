@@ -32,6 +32,7 @@
     "helmet": "latest",
     "mongodb": "latest",
     "mongoose": "latest",
+    "nodemailer": "^6.3.0",
     "passport": "latest",
     "passport-http": "latest",
     "passport-local": "latest"

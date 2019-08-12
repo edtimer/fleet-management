@@ -131,4 +131,13 @@ $(document).ready(function () {
 			}
 		}
 	}
+
+	if (currentPathname == "/users/login") {
+		document.getElementById("forgotPassword").onclick = function () {
+			$('#forgotPasswordModal').modal("show");
+		}
+		// $('#forgotPasswordModal').on('shown.bs.modal', function () {
+		// 	// do something
+		// });
+	}
 });

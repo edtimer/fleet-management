@@ -6,46 +6,55 @@ body {
     font-family: verdana;
 }
 
-/* Handlebars */
+/* Register Page */
 
 /* The message box is shown when the user clicks on the password field */
 #validationMessage {
-    display:none;
+    display: none;
     background: #f1f1f1;
     color: #000;
     position: relative;
     padding: 10px;
     margin-top: 10px;
-  }
-  
-  #validationMessage p {
+}
+
+#validationMessage p {
     padding: 10px 15px;
     font-size: 18px;
-  }
-  
-  /* Add a green text color and a checkmark when the requirements are right */
-  .valid {
+}
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
     color: green;
-  }
-  
-  .valid:before {
+}
+
+.valid:before {
     position: relative;
     left: -5px;
     content: "\2714";
-  }
-  
-  /* Add a red text color and an "x" icon when the requirements are wrong */
-  .invalid {
+}
+
+/* Add a red text color and an "x" icon when the requirements are wrong */
+.invalid {
     color: red;
-  }
-  
-  .invalid:before {
+}
+
+.invalid:before {
     position: relative;
     left: -5px;
     content: "\2716";
-  }
+}
 
-/* End of Handlebars */
+/* End of Register page */
+
+/* Login page */
+
+.forgot-password-button {
+    float: right;
+}
+
+/* End of Login page */
+
 
 #userWelcome {
     font-size: 13px;
@@ -147,7 +156,7 @@ body {
 }
 
 .nav-side-menu li a i,
-.nav-side-menu ul a li i{
+.nav-side-menu ul a li i {
     padding-left: 10px;
     width: 20px;
     padding-right: 20px;
@@ -177,6 +186,7 @@ body {
         width: 100%;
         /*margin-bottom: 10px;*/
     }
+
     .nav-side-menu .toggle-btn {
         display: block;
         cursor: pointer;
@@ -190,30 +200,35 @@ body {
         width: 40px;
         text-align: center;
     }
+
     .brand {
         text-align: left !important;
         font-size: 22px;
         padding-left: 20px;
         line-height: 50px !important;
     }
+
     table#driversTable,
     table#vehiclesTable,
     table#tripsTable {
         border: 0;
     }
+
     table#driversTable thead,
     table#vehiclesTable thead,
     table#tripsTable thead {
         display: none;
     }
+
     table#driversTable tr,
     table#vehiclesTable tr,
     table#tripsTable tr {
         margin-bottom: 25px;
         display: block;
-        
+
         border-bottom: 2px solid #d19b3d;
     }
+
     table#driversTable td,
     table#vehiclesTable td,
     table#tripsTable td {
@@ -221,6 +236,7 @@ body {
         text-align: right;
         font-size: 14px;
     }
+
     table#driversTable td:before,
     table#vehiclesTable td:before,
     table#tripsTable td:before {
@@ -229,6 +245,7 @@ body {
         /*text-transform: uppercase;*/
         font-weight: bold;
     }
+
     #homePage {
         background-image: url(../images/FleetManagementCloud.jpg);
         height: 100%;
@@ -246,12 +263,15 @@ body {
         height: 100%;
         width: 230px;
     }
+
     .nav-side-menu .menu-list .menu-content {
         display: block;
     }
+
     .container-fluid {
         margin-left: 230px;
     }
+
     table {
         border: 1px solid #ccc;
         width: 100%;
@@ -260,20 +280,24 @@ body {
         border-collapse: collapse;
         border-spacing: 0;
     }
+
     table tr {
         margin-bottom: 5px;
         border: 1px solid #ddd;
         padding: 5px;
     }
+
     table th,
     table td {
         padding: 15px;
         text-align: center;
     }
+
     table th {
         font-size: 14px;
         letter-spacing: 1px;
     }
+
     #homePage {
         background-image: url(../images/FMSBackground.jpg);
         height: 100%;
@@ -286,7 +310,8 @@ body {
     }
 }
 
-#mapCanvas, #liveMapCanvas {
+#mapCanvas,
+#liveMapCanvas {
     height: 400px;
     width: auto;
 }
