@@ -1,5 +1,5 @@
 $(document).ready(function () {
-	var currentPathname = window.location.pathname
+	let currentPathname = window.location.pathname
 
 	if (currentPathname == "") {
 		$("#homePageHeader").addClass("active");
@@ -41,13 +41,14 @@ $(document).ready(function () {
 	 * Handlebars Register page
 	*/
 	if (currentPathname == "/users/register") {
-		var myInput = document.getElementById("registerPassword");
-		var myInput2 = document.getElementById("registerPassword2");
-		var letter = document.getElementById("letter");
-		var capital = document.getElementById("capital");
-		var number = document.getElementById("number");
-		var length = document.getElementById("length");
-		var passwordsNoMatch = document.getElementById("passwordsNoMatch");
+		let myInput = document.getElementById("registerPassword");
+		let myInput2 = document.getElementById("registerPassword2");
+		let letter = document.getElementById("letter");
+		let capital = document.getElementById("capital");
+		let number = document.getElementById("number");
+		let symbol = document.getElementById("symbol");
+		let length = document.getElementById("length");
+		let passwordsNoMatch = document.getElementById("passwordsNoMatch");
 
 		// When the user clicks on the password field, show the message box
 		myInput.onfocus = function () {
@@ -62,7 +63,7 @@ $(document).ready(function () {
 		// When the user starts to type something inside the password field
 		myInput.onkeyup = function () {
 			// Validate lowercase letters
-			var lowerCaseLetters = /[a-z]/g;
+			let lowerCaseLetters = /[a-z]/g;
 			if (myInput.value.match(lowerCaseLetters)) {
 				letter.classList.remove("invalid");
 				letter.classList.add("valid");
@@ -72,7 +73,7 @@ $(document).ready(function () {
 			}
 
 			// Validate capital letters
-			var upperCaseLetters = /[A-Z]/g;
+			let upperCaseLetters = /[A-Z]/g;
 			if (myInput.value.match(upperCaseLetters)) {
 				capital.classList.remove("invalid");
 				capital.classList.add("valid");
@@ -82,7 +83,7 @@ $(document).ready(function () {
 			}
 
 			// Validate numbers
-			var numbers = /[0-9]/g;
+			let numbers = /[0-9]/g;
 			if (myInput.value.match(numbers)) {
 				number.classList.remove("invalid");
 				number.classList.add("valid");
@@ -92,13 +93,13 @@ $(document).ready(function () {
 			}
 
 			// Validate symbols
-			var symbols = /[$@!%*?&#^_-]/g;
+			let symbols = /[$@!%*?&#^_-]/g;
 			if (myInput.value.match(symbols)) {
-				number.classList.remove("invalid");
-				number.classList.add("valid");
+				symbol.classList.remove("invalid");
+				symbol.classList.add("valid");
 			} else {
-				number.classList.remove("valid");
-				number.classList.add("invalid");
+				symbol.classList.remove("valid");
+				symbol.classList.add("invalid");
 			}
 
 			// Validate length

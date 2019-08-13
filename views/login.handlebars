@@ -12,7 +12,7 @@
 			<div class="form-group">
 				<label for="username">Username</label>
 				<input type="text" class="form-control" name="username" placeholder="Username"
-					pattern="^([A-Za-z]+)[0-9]*[_]*" title="Letters, numbers and underscore. Must begin with a letter."
+					pattern="^([A-Za-z]+)[0-9]*[_]*" title="Can only contain letters, numbers and underscore. Must begin with a letter."
 					autocomplete="off" required>
 			</div>
 			<div class="form-group">
@@ -40,7 +40,7 @@
 					<form method="post" action="/users/recover-password">
 						<div class="form-group">
 							<label for="email">Email</label>
-							<input type="email" class="form-control" placeholder="something@someone.com" name="email"
+							<input type="email" class="form-control" placeholder="someone@domain.com" name="email"
 								autocomplete="email" required>
 						</div>
 						<button type="submit" class="btn btn-primary">Retrieve password by email</button>

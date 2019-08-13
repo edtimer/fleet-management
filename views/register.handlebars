@@ -1,8 +1,10 @@
 <h2 class="page-header">Register</h2>
 
-<br> {{#if errors}} {{#each errors}}
-<div class="alert alert-danger">{{msg}}</div>
-{{/each}} {{/if}}
+<br> {{#if success_msg}}
+<div class="alert alert-success">{{success_msg}}</div>
+{{/if}} {{#if error_msg}}
+<div class="alert alert-danger">{{error_msg}}</div>
+{{/if}}
 
 <div class="col-md-4">
   <form method="post" action="/users/register">
@@ -37,6 +39,7 @@
       <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
       <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
       <p id="number" class="invalid">A <b>number</b></p>
+      <p id="symbol" class="invalid">A <b>symbol</b></p>
       <p id="length" class="invalid">Minimum <b>8 characters</b></p>
       <p id="passwordsNoMatch" class="invalid" style="display: none">Passwords <b>do not match</b></p>
     </div>
