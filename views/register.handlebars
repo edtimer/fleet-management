@@ -20,12 +20,29 @@
       <label>Email</label>
       <input type="email" class="form-control" placeholder="Email" name="email" autocomplete="email" required>
     </div>
-    <div class="form-group">
+    {{!-- <div class="form-group">
       <label for="password">Password</label>
       <input type="password" id="registerPassword" class="form-control" placeholder="Password" name="password"
         autocomplete="off" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@!%*?&#^_-]).{8,30}"
         title="Must have 8 to 30 characters and contain at least one uppercase, one lowercase, one number and one symbol: !?@#$%^&*_-"
         required>
+    </div>
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <input type="password" id="registerPassword2" class="form-control" placeholder="Password" name="password2"
+        autocomplete="off" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@!%*?&#^_-]).{8,30}"
+        title="Must have 8 to 30 characters and contain at least one uppercase, one lowercase, one number and one symbol: !?@#$%^&*_-"
+        required>
+    </div> --}}
+
+    <div class="form-group">
+      <label for="password">
+        Password
+      </label>
+      <input id="registerPassword" type="password" class="form-control" placeholder="Password" name="password"
+        autocomplete="off" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@!%*?&#^_-]).{8,30}"
+        title="Must have 8 to 30 characters and contain at least one uppercase, one lowercase, one number and one symbol: !?@#$%^&*_-"
+        required />
     </div>
     <div class="form-group">
       <label>Confirm Password</label>

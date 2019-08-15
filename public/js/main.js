@@ -50,6 +50,32 @@ $(document).ready(function () {
 		let length = document.getElementById("length");
 		let passwordsNoMatch = document.getElementById("passwordsNoMatch");
 
+		$('#registerPassword').password({
+			shortPass: 'The password is too short',
+			badPass: 'Weak; try combining letters & numbers',
+			goodPass: 'Medium; try using special characters',
+			strongPass: 'Strong password',
+			containsField: 'The password contains your username',
+			enterPass: 'Type your password',
+			showPercent: false,
+			showText: true, // shows the text tips
+			animate: true, // whether or not to animate the progress bar on input blur/focus
+			animateSpeed: 'fast', // the above animation speed
+			field: false, // select the match field (selector or jQuery instance) for better password checks
+			fieldPartialMatch: true, // whether to check for partials in field
+			minimumLength: 8 // minimum password length (below this threshold, the score is 0)
+		});
+
+		// $('#password').on('password.score', (e, score) => {
+		// 	console.log('Called every time a new score is calculated (this means on every keyup)')
+		// 	console.log('Current score is %d', score)
+		// })
+
+		// $('#password').on('password.text', (e, text, score) => {
+		// 	console.log('Called every time the text is changed (less updated than password.score)')
+		// 	console.log('Current message is %s with a score of %d', text, score)
+		// })
+
 		// When the user clicks on the password field, show the message box
 		myInput.onfocus = function () {
 			document.getElementById("registerMessage").style.display = "block";
