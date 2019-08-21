@@ -9,18 +9,19 @@ body {
 /* Register Page */
 
 /* The message box is shown when the user clicks on the password field */
-#validationMessage {
+#registerMessage {
     display: none;
+    border-radius: 10px;
     background: #f1f1f1;
-    color: #000;
     position: relative;
-    padding: 10px;
-    margin-top: 10px;
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
-#validationMessage p {
-    padding: 10px 15px;
-    font-size: 18px;
+#registerMessage p {
+    margin-left: 5px;
+    font-size: 12px;
 }
 
 /* Add a green text color and a checkmark when the requirements are right */
@@ -48,6 +49,10 @@ body {
 /* End of Register page */
 
 /* Login page */
+
+.form-input {
+    width: 380px;
+}
 
 .forgot-password-button {
     float: right;
@@ -256,9 +261,13 @@ body {
         background-repeat: no-repeat;
         background-size: cover;
     }
+
+    .form-input {
+        width: 100%;
+    }
 }
 
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 769px) {
     .nav-side-menu {
         height: 100%;
         width: 200px;

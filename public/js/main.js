@@ -1,5 +1,5 @@
 $(document).ready(function () {
-	let currentPathname = window.location.pathname
+	let currentPathname = window.location.pathname;
 
 	if (currentPathname == "") {
 		$("#homePageHeader").addClass("active");
@@ -41,21 +41,35 @@ $(document).ready(function () {
 	 * Handlebars Register page
 	*/
 	if (currentPathname == "/users/register") {
-		let myInput = document.getElementById("registerPassword");
-		let myInput2 = document.getElementById("registerPassword2");
 		let letter = document.getElementById("letter");
 		let capital = document.getElementById("capital");
 		let number = document.getElementById("number");
 		let symbol = document.getElementById("symbol");
 		let length = document.getElementById("length");
+		let registerMessage = document.getElementById("registerMessage");
 		let passwordsNoMatch = document.getElementById("passwordsNoMatch");
 		let registerSubmitButton = document.getElementById("registerSubmitButton");
+		let registerPassword = $("#registerPassword");
+		let registerPassword2 = $("#registerPassword2");
+		let registerName = $("#registerName");
+		let registerUsername = $("#registerUsername");
+		let registerEmail = $("#registerEmail");
+
+		function checkRegistrationFormValidity() {
+			if (registerName[0].validity.valid && registerUsername[0].validity.valid &&
+				registerEmail[0].validity.valid && registerPassword[0].validity.valid &&
+				registerPassword2[0].validity.valid && registerPassword[0].value === registerPassword2[0].value) {
+				registerSubmitButton.disabled = false;
+			} else {
+				registerSubmitButton.disabled = true;
+			}
+		}
 
 		$('#registerPassword').password({
 			shortPass: 'The password is too short 🕵️‍',
 			badPass: 'Weak; try combining letters, numbers and symbols 🤨',
 			goodPass: 'Medium; still needs improvement! 👨‍💻',
-			strongPass: 'Yup, you made it 🙃',
+			strongPass: 'That\'s quite a strong password 🙃',
 			containsField: 'The password contains your username',
 			enterPass: 'Type your password',
 			showPercent: false,
@@ -77,112 +91,110 @@ $(document).ready(function () {
 		// 	console.log('Current message is %s with a score of %d', text, score)
 		// })
 
-		// When the user clicks on the password field, show the message box
-		myInput.onfocus = function () {
-			document.getElementById("registerMessage").style.display = "block";
-		}
+		registerName.keyup(function () {
+			checkRegistrationFormValidity();
+		});
+
+		registerUsername.keyup(function () {
+			checkRegistrationFormValidity();
+		});
+
+		registerEmail.keyup(function () {
+			checkRegistrationFormValidity();
+		});
+
+		registerPassword.focus(function () {
+			registerMessage.style.display = "block";
+		});
 
 		// When the user clicks outside of the password field, hide the message box
-		myInput.onblur = function () {
-			document.getElementById("registerMessage").style.display = "none";
-		}
+		registerPassword.blur(function () {
+			registerMessage.style.display = "none";
+		});
 
 		// When the user starts to type something inside the password field
-		myInput.onkeyup = function () {
-			let validPasswordScore = [0, 0, 0, 0, 0, 0];
-			let validPasswordScoreSum = 0;
+		registerPassword.keyup(function () {
+			checkRegistrationFormValidity();
+			registerMessage.style.display = "block";
 
 			// Validate lowercase letters
 			let lowerCaseLetters = /[a-z]/g;
-			if (myInput.value.match(lowerCaseLetters)) {
+			if (registerPassword[0].value.match(lowerCaseLetters)) {
 				letter.classList.remove("invalid");
 				letter.classList.add("valid");
-				validPasswordScore[0] = 1;
 			} else {
 				letter.classList.remove("valid");
 				letter.classList.add("invalid");
-				validPasswordScore[0] = 0;
 			}
 
 			// Validate capital letters
 			let upperCaseLetters = /[A-Z]/g;
-			if (myInput.value.match(upperCaseLetters)) {
+			if (registerPassword[0].value.match(upperCaseLetters)) {
 				capital.classList.remove("invalid");
 				capital.classList.add("valid");
-				validPasswordScore[1] = 1;
 			} else {
-				validPasswordScore = false;
 				capital.classList.remove("valid");
 				capital.classList.add("invalid");
-				validPasswordScore[1] = 0;
 			}
 
 			// Validate numbers
 			let numbers = /[0-9]/g;
-			if (myInput.value.match(numbers)) {
+			if (registerPassword[0].value.match(numbers)) {
 				number.classList.remove("invalid");
 				number.classList.add("valid");
-				validPasswordScore[2] = 1;
 			} else {
 				number.classList.remove("valid");
 				number.classList.add("invalid");
-				validPasswordScore[2] = 0;
 			}
 
 			// Validate symbols
 			let symbols = /[$@!%*?&#^_-]/g;
-			if (myInput.value.match(symbols)) {
+			if (registerPassword[0].value.match(symbols)) {
 				symbol.classList.remove("invalid");
 				symbol.classList.add("valid");
-				validPasswordScore[3] = 1;
 			} else {
 				symbol.classList.remove("valid");
 				symbol.classList.add("invalid");
-				validPasswordScore[3] = 0;
 			}
 
 			// Validate length
-			if (myInput.value.length >= 8 && myInput.value.length <= 30) {
+			if (registerPassword[0].value.length >= 8 && registerPassword[0].value.length <= 30) {
 				length.classList.remove("invalid");
 				length.classList.add("valid");
-				validPasswordScore[4] = 1;
 			} else {
 				length.classList.remove("valid");
 				length.classList.add("invalid");
-				validPasswordScore[4] = 0;
 			}
 
-			if (myInput.value !== myInput2.value) {
-				passwordsNoMatch.style.display = "block";
-				validPasswordScore[5] = 1;
+			if (registerPassword[0].value && registerPassword[0].value === registerPassword2[0].value) {
+				passwordsNoMatch.classList.remove("invalid");
+				passwordsNoMatch.classList.add("valid");
 			} else {
-				passwordsNoMatch.style.display = "none";
-				validPasswordScore[5] = 0;
+				passwordsNoMatch.classList.remove("valid");
+				passwordsNoMatch.classList.add("invalid");
 			}
+		});
 
-			if (registerSubmitButton && validPasswordScore) {
-				validPasswordScoreSum = validPasswordScore.reduce((sum, x) => sum + x);
-				if (validPasswordScoreSum == 6) {
-					registerSubmitButton.classList.add("disabled");
-				} else {
-					registerSubmitButton.classList.remove("disabled");
-				}
-			}
-		}
+		registerPassword2.focus(function () {
+			registerMessage.style.display = "block";
+		});
 
-		myInput2.onblur = function () {
-			document.getElementById("registerMessage").style.display = "none";
-		}
+		registerPassword2.blur(function () {
+			registerMessage.style.display = "none";
+		});
 
-		myInput2.onkeyup = function () {
-			document.getElementById("registerMessage").style.display = "block";
+		registerPassword2.keyup(function () {
+			checkRegistrationFormValidity();
+			registerMessage.style.display = "block";
 
-			if (myInput.value !== myInput2.value) {
-				passwordsNoMatch.style.display = "block";
+			if (registerPassword[0].value && registerPassword[0].value === registerPassword2[0].value) {
+				passwordsNoMatch.classList.remove("invalid");
+				passwordsNoMatch.classList.add("valid");
 			} else {
-				passwordsNoMatch.style.display = "none";
+				passwordsNoMatch.classList.remove("valid");
+				passwordsNoMatch.classList.add("invalid");
 			}
-		}
+		});
 	}
 
 	if (currentPathname == "/users/login") {
