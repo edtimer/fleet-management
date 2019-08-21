@@ -6,7 +6,7 @@
 <div class="alert alert-danger">{{error_msg}}</div>
 {{/if}}
 
-<div class="col-md-4">
+<div class="col-xs-8 col-md-6 col-lg-6 col-xl-5">
   <form method="post" action="/users/register">
     <div class="form-group">
       <label>Name</label>
@@ -52,15 +52,15 @@
         required>
     </div>
     <div id="registerMessage" style="display: none">
-      <h3>Password must contain the following:</h3>
-      <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
-      <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
-      <p id="number" class="invalid">A <b>number</b></p>
-      <p id="symbol" class="invalid">A <b>symbol</b></p>
-      <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+      <h4>Password must respect the following rules:</h4>
+      <p id="letter" class="invalid">Must contain at least one <b>lowercase</b> letter</p>
+      <p id="capital" class="invalid">Must contain at least one <b>capital (uppercase)</b> letter</p>
+      <p id="number" class="invalid">Must contain at least one <b>number</b></p>
+      <p id="symbol" class="invalid">Must contain at least one <b>symbol ($@!%*?&#^_-)</b></p>
+      <p id="length" class="invalid">Must be between <b>8 to 30 characters</b></p>
       <p id="passwordsNoMatch" class="invalid" style="display: none">Passwords <b>do not match</b></p>
     </div>
-    <button type="submit" class="btn btn-primary">Register</button>
+    <button id="registerSubmitButton" type="submit" class="btn btn-primary disabled">Register</button>
   </form>
   <br>
   <br>

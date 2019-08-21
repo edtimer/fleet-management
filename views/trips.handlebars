@@ -1,6 +1,6 @@
 <div id="viewVehicleTripsPage">
     <h2>Vehicle Trips Page</h2>
-    <p>Here you can view the trips of the vehicle 
+    <p>Here you can view the trips of the vehicle
         <b>{{items.manufacturer}} {{items.model}}</b> with the registration plate
         <b>{{ items.registrationPlate }}</b>
     </p>
@@ -11,16 +11,26 @@
     <div class="alert alert-danger">{{error_msg}}</div>
     {{/if}}
 
-    <div title="Live trip">
-        <h3>View live trip:
+    <div>
+        <h3 title="Live trip" style="float:left">View live trip:
             <a href="/live/id/{{items._id}}">
-            <button class="btn btn-success btn-lg" data-toggle="modal" data-title="Live trip">
-                <span class="glyphicon glyphicon-map-marker"></span>
-            </button>
+                <button class="btn btn-success btn-lg" data-toggle="modal" data-title="Live trip">
+                    <span class="glyphicon glyphicon-map-marker"></span>
+                </button>
             </a>
         </h3>
+
+        <div class="card-inner">
+            <span>info</span>
+            <h4>{{ items.manufacturer }} {{ items.model }}</h4>
+            <p><b>RCA:</b> {{ items.rca }}</p>
+            <p><b>ITP:</b> {{ items.itp }}</p>
+            <p><b>Vignette:</b> {{ items.rovinieta }}</p>
+        </div>
     </div>
     <br>
+
+
 
     <table class="table table-condensed table-striped" id="tripsTable">
         <thead class="table-header">
@@ -42,19 +52,19 @@
                 <td data-label="Driver">{{ this.driver.firstName }} {{ this.driver.lastName }}</td>
                 <td data-label="Start date">{{ this.startDate }}</td>
                 <td data-label="Stop date">{{ this.stopDate }}</td>
-                <td data-label="Start location" onclick="showLocation(this.innerHTML)" 
-                onmouseover="" style="cursor: pointer;">
+                <td data-label="Start location" onclick="showLocation(this.innerHTML)" onmouseover=""
+                    style="cursor: pointer;">
                     {{ this.startLocation.lat }}, {{ this.startLocation.long }}
                 </td>
-                <td data-label="Stop location" onclick="showLocation(this.innerHTML)" 
-                onmouseover="" style="cursor: pointer;">
+                <td data-label="Stop location" onclick="showLocation(this.innerHTML)" onmouseover=""
+                    style="cursor: pointer;">
                     {{ this.stopLocation.lat }}, {{ this.stopLocation.long }}
                 </td>
                 <td data-label="Trip distance (km)">{{ this.distance }}</td>
                 <td data-label="Trips">
                     <p class="operations" title="View trip">
-                        <button class="btn btn-success btn-md" data-toggle="modal" 
-                        data-title="View trip" onclick="initMap('{{ this.tripId }}')">
+                        <button class="btn btn-success btn-md" data-toggle="modal" data-title="View trip"
+                            onclick="initMap('{{ this.tripId }}')">
                             <span class="glyphicon glyphicon-road"></span>
                         </button>
                     </p>
@@ -76,8 +86,8 @@
                     <div id="mapCanvas"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success center-block" 
-                    data-dismiss="modal" align="center"><span></span>Close</button>
+                    <button type="button" class="btn btn-success center-block" data-dismiss="modal"
+                        align="center"><span></span>Close</button>
                 </div>
             </div>
         </div>

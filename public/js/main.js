@@ -49,12 +49,13 @@ $(document).ready(function () {
 		let symbol = document.getElementById("symbol");
 		let length = document.getElementById("length");
 		let passwordsNoMatch = document.getElementById("passwordsNoMatch");
+		let registerSubmitButton = document.getElementById("registerSubmitButton");
 
 		$('#registerPassword').password({
-			shortPass: 'The password is too short',
-			badPass: 'Weak; try combining letters & numbers',
-			goodPass: 'Medium; try using special characters',
-			strongPass: 'Strong password',
+			shortPass: 'The password is too short 🕵️‍',
+			badPass: 'Weak; try combining letters, numbers and symbols 🤨',
+			goodPass: 'Medium; still needs improvement! 👨‍💻',
+			strongPass: 'Yup, you made it 🙃',
 			containsField: 'The password contains your username',
 			enterPass: 'Type your password',
 			showPercent: false,
@@ -88,14 +89,19 @@ $(document).ready(function () {
 
 		// When the user starts to type something inside the password field
 		myInput.onkeyup = function () {
+			let validPasswordScore = [0, 0, 0, 0, 0, 0];
+			let validPasswordScoreSum = 0;
+
 			// Validate lowercase letters
 			let lowerCaseLetters = /[a-z]/g;
 			if (myInput.value.match(lowerCaseLetters)) {
 				letter.classList.remove("invalid");
 				letter.classList.add("valid");
+				validPasswordScore[0] = 1;
 			} else {
 				letter.classList.remove("valid");
 				letter.classList.add("invalid");
+				validPasswordScore[0] = 0;
 			}
 
 			// Validate capital letters
@@ -103,9 +109,12 @@ $(document).ready(function () {
 			if (myInput.value.match(upperCaseLetters)) {
 				capital.classList.remove("invalid");
 				capital.classList.add("valid");
+				validPasswordScore[1] = 1;
 			} else {
+				validPasswordScore = false;
 				capital.classList.remove("valid");
 				capital.classList.add("invalid");
+				validPasswordScore[1] = 0;
 			}
 
 			// Validate numbers
@@ -113,9 +122,11 @@ $(document).ready(function () {
 			if (myInput.value.match(numbers)) {
 				number.classList.remove("invalid");
 				number.classList.add("valid");
+				validPasswordScore[2] = 1;
 			} else {
 				number.classList.remove("valid");
 				number.classList.add("invalid");
+				validPasswordScore[2] = 0;
 			}
 
 			// Validate symbols
@@ -123,24 +134,39 @@ $(document).ready(function () {
 			if (myInput.value.match(symbols)) {
 				symbol.classList.remove("invalid");
 				symbol.classList.add("valid");
+				validPasswordScore[3] = 1;
 			} else {
 				symbol.classList.remove("valid");
 				symbol.classList.add("invalid");
+				validPasswordScore[3] = 0;
 			}
 
 			// Validate length
 			if (myInput.value.length >= 8 && myInput.value.length <= 30) {
 				length.classList.remove("invalid");
 				length.classList.add("valid");
+				validPasswordScore[4] = 1;
 			} else {
 				length.classList.remove("valid");
 				length.classList.add("invalid");
+				validPasswordScore[4] = 0;
 			}
 
 			if (myInput.value !== myInput2.value) {
 				passwordsNoMatch.style.display = "block";
+				validPasswordScore[5] = 1;
 			} else {
 				passwordsNoMatch.style.display = "none";
+				validPasswordScore[5] = 0;
+			}
+
+			if (registerSubmitButton && validPasswordScore) {
+				validPasswordScoreSum = validPasswordScore.reduce((sum, x) => sum + x);
+				if (validPasswordScoreSum == 6) {
+					registerSubmitButton.classList.add("disabled");
+				} else {
+					registerSubmitButton.classList.remove("disabled");
+				}
 			}
 		}
 
