@@ -20,7 +20,6 @@
       <label>Email</label>
       <input type="email" id="registerEmail" class="form-control" placeholder="Email" name="email" required>
     </div>
-
     <div class="form-group">
       <label for="password">
         Password
@@ -37,14 +36,14 @@
         title="Must have 8 to 30 characters and contain at least one uppercase, one lowercase, one number and one symbol: !?@#$%^&*_-"
         required>
     </div>
-    <div id="registerMessage">
-      <h5><b>Password must respect the following rules:</b></h5>
-      <p id="letter" class="invalid">Must contain at least one <b>lowercase</b> letter</p>
-      <p id="capital" class="invalid">Must contain at least one <b>capital (uppercase)</b> letter</p>
-      <p id="number" class="invalid">Must contain at least one <b>number</b></p>
-      <p id="symbol" class="invalid">Must contain at least one <b>symbol ($@!%*?&#^_-)</b></p>
-      <p id="length" class="invalid">Must be between <b>8 to 30 characters</b></p>
-      <p id="passwordsNoMatch" class="invalid">Confirmation password <b>should match</b></p>
+    <div id="registerMessage" style="display: none">
+      <h4>Password must use the following rules:</h4>
+      <p id="letter" class="invalid">At least one <b>lowercase</b> letter</p>
+      <p id="capital" class="invalid">At least one <b>capital (uppercase)</b> letter</p>
+      <p id="number" class="invalid">At least one <b>number</b></p>
+      <p id="symbol" class="invalid">At least one <b>symbol ($@!%*?&#^_-)</b></p>
+      <p id="length" class="invalid">Between <b>8 to 30 characters</b></p>
+      <p id="passwordsNoMatch" class="invalid" style="display: none">Passwords <b>should match</b></p>
     </div>
     <button id="registerSubmitButton" type="submit" class="btn btn-primary" disabled>Register</button>
   </form>

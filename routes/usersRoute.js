@@ -6,6 +6,15 @@ const nodemailer = require("nodemailer");
 const fs = require('fs');
 var User = require('../models/user');
 var userId;
+const requestLimit = 30;	// TODO
+
+// Function to generate 36 character string
+const guid = function () {
+	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+		var r = Math.random() * 16 | 0, v = c == 'x' ? r : r & 0x3 | 0x8;
+		return v.toString(16);
+	});
+}
 
 // Register
 router.get('/register', function (req, res) {
@@ -91,8 +100,25 @@ router.post('/register', function (req, res) {
 	}
 });
 
-// Recover user password
-router.post('/recover-password', function (req, res) {
+router.get('/reset-password', function (req, res) {	// TODO
+	console.log(req.headers.cookie);
+	if (req.query.key) {
+		const genKey = req.query.key;
+		if (typeof genKey === "string" && genKey.length === 36) {
+			req.flash('success_msg', "You can now enter the new password.")
+			res.redirect('login');
+		} else {
+			req.flash('error_msg', 'An error occured. Please try again.');
+			res.redirect('/users/login');
+		}
+	} else {
+		req.flash('error_msg', 'An error occured. Please try again.');
+		res.redirect('/users/login');
+	}
+});
+
+// Reset user password
+router.post('/reset-password', function (req, res) {
 
 	// Validation
 	req.checkBody('email', 'Email is required').notEmpty();
@@ -106,12 +132,26 @@ router.post('/recover-password', function (req, res) {
 		});
 	} else {
 		User.findOne({ email: req.body.email }).exec().then((foundUser) => {
-			var email = req.body.email;
-
 			console.log("foundUser: ", foundUser);
 
 			if (foundUser) {
-				sendEmail().then(response => {
+				let genKey = guid();
+				let recipient = foundUser.email;
+				let subject = "Password reset ✔";
+				let baseurl = 'https://afm.herokuapp.com';
+				if (req.headers.host) {
+					baseurl = "http://" + req.headers.host;
+				}
+				let html = "<html><body>";
+				html += "Hi " + foundUser.name + ",<br><br>";
+				html += "Your username is <b>" + foundUser.username + "</b><br><br>";
+				html += "<a href='" + baseurl + '/users/reset-password?key=' + genKey + "'>Click here to reset your password</a><br><br>";
+				html += "Feel free to reply if you need something from us!";
+				html += "Keep in touch,<br>";
+				html += "<a href='https://afm.herokuapp.com'>Fleet Management Team</a><br><br>";
+				html += "</body></html>";
+
+				sendEmail(recipient, subject, html).then(response => {
 					console.log("SMTP response:");
 					console.log(response);
 				}, error => {
@@ -119,11 +159,11 @@ router.post('/recover-password', function (req, res) {
 					console.log(error);
 				}).catch(console.error);
 
-				var msg = 'We sent you an email to ' + email + ' in order to recover your password.';
-				req.flash('success_msg', msg);
+				let confirmMessage = 'We sent you an email to ' + recipient + ' in order to reset your password.';
+				req.flash('success_msg', confirmMessage);
 				res.redirect('/users/login');
 			} else {
-				req.flash('error_msg', 'Email was not found in our database.');
+				req.flash('error_msg', 'The email was not found in our database.');
 				res.redirect('/users/login');
 			}
 		});
@@ -169,11 +209,17 @@ router.post('/login',
 router.get('/logout', function (req, res) {
 	req.logout();
 	req.flash('success_msg', 'You are logged out');
-	res.redirect('/users/login');
+	// res.clearCookie('login');
+	req.session.destroy(function (err) {
+		if (err) {
+			console.log('An error occured on logout: ' + err);
+		}
+		res.redirect('/users/login');
+	});
 });
 
 // async..await is not allowed in global scope, must use a wrapper
-async function sendEmail() {
+async function sendEmail(recipient, subject, htmlMsg) {
 	const smtpConfig = {
 		host: 'smtp.gmail.com',
 		port: 465,
@@ -200,11 +246,10 @@ async function sendEmail() {
 
 	// send mail with defined transport object
 	let info = await transporter.sendMail({
-		from: '"Fleet Management 🚗" <andrexpert94@gmail.com>', // sender address
-		to: "andrei.ulinici1@gmail.com", // list of receivers
-		subject: "Hello ✔", // Subject line
-		text: "Hello world?", // plain text body
-		html: "<b>Hello world?</b>" // html body
+		from: '"Fleet Management 🚗" <my.web.dev.user@gmail.com>', // sender address
+		to: recipient, // list of receivers
+		subject: subject, // Subject line
+		html: htmlMsg
 	}, function (error, response) {
 		if (error) {
 			console.log("Error in SMTP:")
