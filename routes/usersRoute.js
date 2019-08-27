@@ -41,9 +41,8 @@ router.post('/register', function (req, res) {
 	var errors = req.validationErrors();
 
 	if (errors) {
-		res.render('login', {
-			error_msg: errors
-		});
+		req.flash('error_msg', parseValidationErrors(errors));
+		return res.redirect('/users/login');
 	} else {
 		User.findOne({ username: req.body.username }).exec().then((foundUser) => {
 			var username = req.body.username;
@@ -52,10 +51,10 @@ router.post('/register', function (req, res) {
 				if (username === foundUser.username) {
 					console.log('Username ' + username + ' already exists.');
 					req.flash('error_msg', 'Username ' + username + ' already exists.');
-					res.redirect('/users/login');
+					return res.redirect('/users/login');
 				} else {
 					req.flash('error_msg', 'An error occurred.');
-					res.redirect('/users/login');
+					return res.redirect('/users/login');
 				}
 			} else if (username) {
 				User.findOne({ email: req.body.email }).exec().then((foundEmail) => {
@@ -65,10 +64,10 @@ router.post('/register', function (req, res) {
 						if (email === foundEmail.email) {
 							console.log('Email ' + email + ' already exists.');
 							req.flash('error_msg', 'Email ' + email + ' already exists.');
-							res.redirect('/users/register');
+							return res.redirect('/users/register');
 						} else {
 							req.flash('error_msg', 'An error occurred.');
-							res.redirect('/users/register');
+							return res.redirect('/users/register');
 						}
 					} else {
 						var newUser = new User({
@@ -81,28 +80,28 @@ router.post('/register', function (req, res) {
 							console.log("New User: " + user);
 							if (err) {
 								req.flash('error_msg', 'An error occurred.');
-								res.redirect('/users/register');
+								return res.redirect('/users/register');
 							}
 						});
 
 						req.flash('success_msg', 'You are registered and can now log in.');
-						res.redirect('/users/login');
+						return res.redirect('/users/login');
 					}
 				});
 			} else {
 				req.flash('error_msg', 'An error occurred.');
-				res.redirect('/users/register');
+				return res.redirect('/users/register');
 			}
 		}).catch((err) => {
 			console.log('An error occurred: ' + err);
 			req.flash('error_msg', 'An error occurred.');
-			res.redirect('/users/register');
+			return res.redirect('/users/register');
 		});
 	}
 });
 
 
-// Recover account password
+// Recover account
 router.get('/reset-password', function (req, res) {
 	const token = req.body.token;
 
@@ -110,7 +109,7 @@ router.get('/reset-password', function (req, res) {
 		res.render('resetpassword', { token: token });
 	} else {
 		req.flash('error_msg', 'An error occurred.');
-		res.redirect('/users/login');
+		return res.redirect('/users/login');
 	}
 });
 
@@ -123,16 +122,16 @@ router.post('/reset-password', function (req, res) {
 
 	var errors = req.validationErrors();
 	if (errors) {
-		return res.render('login', {
-			error_msg: "Please check your credentials and try again."
-		});
+		req.flash('error_msg', parseValidationErrors(errors));
+		return res.redirect('/users/login');
 	}
-	console.log("here")
+
 	if (req.body.token) {
 		const token = req.body.token;
 		const password = req.body.password;
+		const username = req.body.username;
 
-		if (typeof token === "string" && token.length === 36) {
+		if (typeof token === "string" && token.length === 36 && username && password) {
 			let updateUser = {};
 			User.encryptPassword(password, function (hash) {
 				if (hash) {
@@ -141,31 +140,36 @@ router.post('/reset-password', function (req, res) {
 						password: hash
 					};
 				} else {
-					req.flash('error_msg', 'An error occurred.3');
-					res.redirect('/users/login');
+					req.flash('error_msg', 'An error occurred.');
+					return res.redirect('/users/login');
 				}
 
-				User.findOneAndUpdate({ token: token }, updateUser, { upsert: false }).exec().then((updatedUser) => {
+				User.findOneAndUpdate({ token: token, username: username }, updateUser, { upsert: false }).exec().then((updatedUser) => {
 					console.log("Updated user:");
 					console.log(updatedUser);
+
+					if (updateUser) {
+						req.flash('success_msg', "You can now log into your recovered account.")
+						return res.redirect('/users/login');
+					} else {
+						req.flash('error_msg', 'No user found. Please try again.');
+						return res.redirect('/users/login');
+					}
 				}).catch((err) => {
 					console.log("No user found by token.");
-					req.flash('error_msg', 'An error occurred.2');
-					res.redirect('/users/login');
+					req.flash('error_msg', 'An error occurred.');
+					return res.redirect('/users/login');
 				});
 			});
-
-			req.flash('success_msg', "You can now log into your recovered account.")
-			res.redirect('/users/login');
 		} else {
 			console.log("Wrong token.");
-			req.flash('error_msg', 'An error occurred.3');
-			res.redirect('/users/login');
+			req.flash('error_msg', 'An error occurred.');
+			return res.redirect('/users/login');
 		}
 	} else {
 		console.log("No token.");
-		req.flash('error_msg', 'An error occurred.4');
-		res.redirect('/users/login');
+		req.flash('error_msg', 'An error occurred.');
+		return res.redirect('/users/login');
 	}
 });
 
@@ -173,25 +177,31 @@ router.get('/recover-account', function (req, res) {
 	// console.log(req.headers.cookie);
 	if (req.query.key) {
 		const genKey = req.query.key;
-		console.log(genKey)
+		console.log(genKey);
 
 		if (typeof genKey === "string" && genKey.length === 36) {
 			User.findOne({ token: genKey }).exec().then((foundUser) => {	// TODO, it also gets here
-				console.log("foundUser: ", foundUser);
-				req.flash('success_msg', "You can now enter the new password.");
-				res.render('resetpassword', { token: genKey });
+				if (foundUser) {
+					console.log("foundUser: ", foundUser);
+					req.flash('success_msg', "You can now enter the new password.");
+					res.render('resetpassword', { token: genKey });
+				} else {
+					console.log("Token is not valid.");
+					req.flash('error_msg', 'Token is not valid.');
+					return res.redirect('/users/login');
+				}
 			}).catch((err) => {
 				console.log("User not found.");
 				req.flash('error_msg', 'An error occurred.');
-				res.redirect('/users/login');
+				return res.redirect('/users/login');
 			});
 		} else {
 			req.flash('error_msg', 'An error occurred.');
-			res.redirect('/users/login');
+			return res.redirect('/users/login');
 		}
 	} else {
 		req.flash('error_msg', 'An error occurred.');
-		res.redirect('/users/login');
+		return res.redirect('/users/login');
 	}
 });
 
@@ -203,9 +213,8 @@ router.post('/recover-account', function (req, res) {
 
 	var errors = req.validationErrors();
 	if (errors) {
-		res.render('login', {
-			error_msg: errors
-		});
+		req.flash('error_msg', parseValidationErrors(errors));
+		return res.redirect('/users/login');
 	} else {
 		User.findOne({ email: req.body.email }).exec().then((foundUser) => {
 			if (foundUser) {
@@ -236,7 +245,7 @@ router.post('/recover-account', function (req, res) {
 				}).catch((err) => {
 					console.log("User update error:", err);
 					req.flash('error_msg', 'An error occurred.');
-					res.redirect('/users/login');
+					return res.redirect('/users/login');
 				});
 
 				sendEmail(recipient, subject, html).then(response => {
@@ -249,10 +258,10 @@ router.post('/recover-account', function (req, res) {
 
 				let confirmMessage = 'We sent you an email to ' + recipient + ' in order to reset your password.';
 				req.flash('success_msg', confirmMessage);
-				res.redirect('/users/login');
+				return res.redirect('/users/login');
 			} else {
 				req.flash('error_msg', 'The email was not found in our database.');
-				res.redirect('/users/login');
+				return res.redirect('/users/login');
 			}
 		});
 	}
@@ -350,6 +359,17 @@ async function sendEmail(recipient, subject, htmlMsg) {
 	});
 
 	return "Ok";
+}
+
+function parseValidationErrors(errors) {
+	let msg = "";
+	for (let i = 0; i < errors.length; i++) {
+		msg += errors[i].msg;
+		if (i < errors.length - 1) {
+			msg += '\n';
+		}
+	}
+	return msg;
 }
 
 module.exports = router;

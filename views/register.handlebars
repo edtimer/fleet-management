@@ -9,27 +9,25 @@
 <div class="form-input">
   <form method="post" action="/users/register" autocomplete="off">
     <div class="form-group">
-      <label>Name</label>
+      <label for="registerName">Name</label>
       <input type="text" id="registerName" class="form-control" placeholder="Name" name="name"
         pattern="^[A-Za-z]+[A-Za-z0-9_.-]{1,30}"
         title="Can only contain letters, numbers and symbols '_-.'. Up to 30 characters. Must begin with a letter."
         required>
     </div>
     <div class="form-group">
-      <label for="username">Username</label>
+      <label for="registerUsername">Username</label>
       <input type="text" id="registerUsername" class="form-control" placeholder="Username" name="username"
         pattern="^[A-Za-z]+[A-Za-z0-9_.-]{1,30}"
         title="Can only contain letters, numbers and symbols '_-.'. Up to 30 characters. Must begin with a letter."
         required>
     </div>
     <div class="form-group">
-      <label>Email</label>
+      <label for="registerEmail">Email</label>
       <input type="email" id="registerEmail" class="form-control" placeholder="Email" name="email" required>
     </div>
     <div class="form-group">
-      <label for="password">
-        Password
-      </label>
+      <label for="registerPassword">Password</label>
       <input id="registerPassword" type="password" class="form-control" placeholder="Password" name="password"
         autocomplete="off" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@!%*?&#^_-]).{8,30}"
         title="Must have 8 to 30 characters and contain at least one uppercase, one lowercase, one number and one symbol: !?@#$%^&*_-"

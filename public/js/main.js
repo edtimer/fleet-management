@@ -38,9 +38,9 @@ $(document).ready(function () {
 	}
 
 	/*
-	 * Handlebars Register page
+	 * Validation for Registration and Account recovery forms
 	*/
-	if (currentPathname == "/users/register" || currentPathname == "/users/recover-account") {
+	function validateForm(registerName, registerEmail) {
 		let letter = document.getElementById("letter");
 		let capital = document.getElementById("capital");
 		let number = document.getElementById("number");
@@ -50,16 +50,21 @@ $(document).ready(function () {
 		let passwordsNoMatch = document.getElementById("passwordsNoMatch");
 		let registerPassword = $("#registerPassword");
 		let registerPassword2 = $("#registerPassword2");
-		let registerName = $("#registerName");
 		let registerUsername = $("#registerUsername");
-		let registerEmail = $("#registerEmail");
 		let registerSubmitButton = document.getElementById("registerSubmitButton");
 
 		function checkRegistrationFormValidity() {
-			if (registerName[0].validity.valid && registerUsername[0].validity.valid &&
-				registerEmail[0].validity.valid && registerPassword[0].validity.valid &&
+			if (registerUsername[0].validity.valid && registerPassword[0].validity.valid &&
 				registerPassword2[0].validity.valid && registerPassword[0].value === registerPassword2[0].value) {
-				registerSubmitButton.disabled = false;
+				if (registerName && registerEmail) {
+					if (registerName[0].validity.valid && registerEmail[0].validity.valid) {
+						registerSubmitButton.disabled = false;
+					} else {
+						registerSubmitButton.disabled = true;
+					}
+				} else {
+					registerSubmitButton.disabled = false;
+				}
 			} else {
 				registerSubmitButton.disabled = true;
 			}
@@ -91,15 +96,16 @@ $(document).ready(function () {
 		// 	console.log('Current message is %s with a score of %d', text, score)
 		// })
 
-		registerName.keyup(function () {
-			checkRegistrationFormValidity();
-		});
+		if (registerName && registerEmail) {
+			registerName.keyup(function () {
+				checkRegistrationFormValidity();
+			});
 
+			registerEmail.keyup(function () {
+				checkRegistrationFormValidity();
+			});
+		}
 		registerUsername.keyup(function () {
-			checkRegistrationFormValidity();
-		});
-
-		registerEmail.keyup(function () {
 			checkRegistrationFormValidity();
 		});
 
@@ -195,6 +201,14 @@ $(document).ready(function () {
 				passwordsNoMatch.classList.add("invalid");
 			}
 		});
+	}
+
+	if (currentPathname == "/users/register") {
+		validateForm($("#registerName"), $("#registerEmail"));
+	}
+
+	if (currentPathname.includes("/users/recover-account")) {
+		validateForm();
 	}
 
 	if (currentPathname == "/users/login") {
