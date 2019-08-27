@@ -40,7 +40,7 @@ $(document).ready(function () {
 	/*
 	 * Handlebars Register page
 	*/
-	if (currentPathname == "/users/register") {
+	if (currentPathname == "/users/register" || currentPathname == "/users/recover-account") {
 		let letter = document.getElementById("letter");
 		let capital = document.getElementById("capital");
 		let number = document.getElementById("number");
@@ -48,12 +48,12 @@ $(document).ready(function () {
 		let length = document.getElementById("length");
 		let registerMessage = document.getElementById("registerMessage");
 		let passwordsNoMatch = document.getElementById("passwordsNoMatch");
-		let registerSubmitButton = document.getElementById("registerSubmitButton");
 		let registerPassword = $("#registerPassword");
 		let registerPassword2 = $("#registerPassword2");
 		let registerName = $("#registerName");
 		let registerUsername = $("#registerUsername");
 		let registerEmail = $("#registerEmail");
+		let registerSubmitButton = document.getElementById("registerSubmitButton");
 
 		function checkRegistrationFormValidity() {
 			if (registerName[0].validity.valid && registerUsername[0].validity.valid &&

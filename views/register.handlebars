@@ -10,11 +10,17 @@
   <form method="post" action="/users/register" autocomplete="off">
     <div class="form-group">
       <label>Name</label>
-      <input type="text" id="registerName" class="form-control" placeholder="Name" name="name" required>
+      <input type="text" id="registerName" class="form-control" placeholder="Name" name="name"
+        pattern="^[A-Za-z]+[A-Za-z0-9_.-]{1,30}"
+        title="Can only contain letters, numbers and symbols '_-.'. Up to 30 characters. Must begin with a letter."
+        required>
     </div>
     <div class="form-group">
       <label for="username">Username</label>
-      <input type="text" id="registerUsername" class="form-control" placeholder="Username" name="username" required>
+      <input type="text" id="registerUsername" class="form-control" placeholder="Username" name="username"
+        pattern="^[A-Za-z]+[A-Za-z0-9_.-]{1,30}"
+        title="Can only contain letters, numbers and symbols '_-.'. Up to 30 characters. Must begin with a letter."
+        required>
     </div>
     <div class="form-group">
       <label>Email</label>
@@ -43,9 +49,9 @@
       <p id="number" class="invalid">At least one <b>number</b></p>
       <p id="symbol" class="invalid">At least one <b>symbol ($@!%*?&#^_-)</b></p>
       <p id="length" class="invalid">Between <b>8 to 30 characters</b></p>
-      <p id="passwordsNoMatch" class="invalid" style="display: none">Passwords <b>should match</b></p>
+      <p id="passwordsNoMatch" class="invalid">Passwords <b>should match</b></p>
     </div>
-    <button id="registerSubmitButton" type="submit" class="btn btn-primary" disabled>Register</button>
+    <button id="registerSubmitButton" type="submit" class="btn btn-primary">Register</button>
   </form>
   <br>
   <br>
