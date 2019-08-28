@@ -5,6 +5,7 @@ var LocalStrategy = require('passport-local').Strategy;
 const nodemailer = require("nodemailer");
 const fs = require('fs');
 var User = require('../models/user');
+var cookiesig = require('cookie-signature');
 var userId;
 var objectId = require('mongodb').ObjectID;
 const requestLimit = 30;	// TODO
@@ -24,6 +25,9 @@ router.get('/register', function (req, res) {
 
 // Login
 router.get('/login', function (req, res) {
+	// console.log(req.session)
+	// console.log(req.headers)
+	// console.log(cookiesig.sign(req.sessionID, 'rand0ms3cr3tSession'));
 	res.render('login');
 });
 

@@ -403,3 +403,11 @@ body {
 .card-inner:hover span {
     color: rgba(255, 255, 255, 0)
 }
+
+.card-inner-joke {
+    clip-path: circle(10% at 87% 25%);
+}
+
+.card-inner-joke p {
+    font-size: 13px;
+}

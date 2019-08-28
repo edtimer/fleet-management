@@ -125,10 +125,12 @@ app.use(session({
   saveUninitialized: true,
   resave: false,
   cookie: {
-    httpOnly: true,
-    expires: expiryDate
+    httpOnly: true,   // flags the cookie to be accessible only by the web server 
+    expires: expiryDate,
+    secure: false   // marks the cookie to be used with HTTPS only (defaults to false)
   }
 }));
+// TODO: make cookie secure in production
 
 // Express Validator
 app.use(expressValidator());
