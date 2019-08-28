@@ -18,13 +18,45 @@ const guid = function () {
 	});
 }
 
+function isAuthenticated(req) {
+	if (req.isAuthenticated()) {
+		console.log("Logged out.");
+		req.logout();
+		req.session.destroy(function (err) {
+			if (err) {
+				console.log('An error occurred on logout: ' + err);
+			} else {
+				return true;
+			}
+		});
+	} else {
+		return false;
+	}
+}
+
+function ensureDeAuthenticated(req, res, next) {
+	if (!req.isAuthenticated()) {
+		return next();
+	} else {
+		req.logout();
+		req.session.destroy(function (err) {
+			if (err) {
+				console.log('An error occurred on logout: ' + err);
+			} else {
+				return true;
+			}
+		});
+		res.redirect('/users/login');
+	}
+}
+
 // Register
-router.get('/register', function (req, res) {
+router.get('/register', ensureDeAuthenticated, function (req, res) {
 	res.render('register');
 });
 
 // Login
-router.get('/login', function (req, res) {
+router.get('/login', ensureDeAuthenticated, function (req, res) {
 	// console.log(req.session)
 	// console.log(req.headers)
 	// console.log(cookiesig.sign(req.sessionID, 'rand0ms3cr3tSession'));
@@ -106,7 +138,7 @@ router.post('/register', function (req, res) {
 
 
 // Recover account
-router.get('/reset-password', function (req, res) {
+router.get('/reset-password', ensureDeAuthenticated, function (req, res) {
 	const token = req.body.token;
 
 	if (typeof token === "string" && token.length === 36) {
@@ -315,7 +347,7 @@ router.get('/logout', function (req, res) {
 	// res.clearCookie('login');
 	req.session.destroy(function (err) {
 		if (err) {
-			console.log('An error occurred. on logout: ' + err);
+			console.log('An error occurred on logout: ' + err);
 		}
 		res.redirect('/users/login');
 	});

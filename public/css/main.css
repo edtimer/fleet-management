@@ -366,7 +366,7 @@ body {
 /* Clip Path Transition card */
 .card-inner {
     background: rgb(9, 201, 153);
-    padding: 1em;
+    padding: 12px;
     border-radius: 10px;
     width: 270px;
     clip-path: circle(10% at 87% 17%);
@@ -397,7 +397,7 @@ body {
     font-weight: bold;
     transition: color .5s;
     position: relative;
-    margin-right: 3%;
+    margin-right: 4%;
 }
 
 .card-inner:hover span {
