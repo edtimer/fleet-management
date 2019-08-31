@@ -18,6 +18,9 @@ var mongoose = require('mongoose');
 var helmet = require('helmet');
 //var assert = require('assert');
 
+// csurf middleware to mitigate CSRF
+// var csrf = require('csurf');
+
 // File System for loading the list of words
 var fs = require('fs');
 
@@ -108,12 +111,32 @@ app.engine('handlebars', exphbs({
 }));
 app.set('view engine', 'handlebars');
 
-// BodyParser Middleware
+/**
+ *    BodyParser Middleware
+ * body-parser extracts the entire body portion of an incoming request 
+ * stream and exposes it on req.body
+ * Also, protects against HTTP parameter solution — called hpp 
+ * It identifies any repeated parameters and only passes the last specified value.
+ * 
+ * urlencoded() and json() are actually middleware factories that returns
+ * a middleware function which invokes next()
+ * 
+ *  */
+
+// Parses the text as JSON and exposes the resulting object on req.body
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
+
+// Parses application/x-www-form-urlencoded
+// The value can be a string or array (when extended is false), 
+// or any type (when extended is true).
+var parseForm = bodyParser.urlencoded({ extended: false });
+app.use(parseForm);
+
 app.use(cookieParser());
+
+// Cross-Site Request Forgery - after bodyParser and cookieParser
+// var csrfProtection = module.exports = csrf({ cookie: true });
+// app.use(csrfProtection);
 
 // Set Static Folder
 app.use(express.static(path.join(__dirname, 'public')));
@@ -138,6 +161,9 @@ app.use(expressValidator());
 // Passport init
 app.use(passport.initialize());
 app.use(passport.session());
+// passport.session() supports persistent login sessions (recommended)
+// RememberMeStrategy = require('../..').Strategy;
+// app.use(passport.authenticate('remember-me'));
 
 // Connect Flash
 app.use(flash());
@@ -147,6 +173,8 @@ app.use(function (req, res, next) {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.user = req.user || null;
+  // res.cookie('XSRF-TOKEN', req.csrfToken());
+  // res.locals.csrfToken = req.csrfToken();
   next();
 });
 

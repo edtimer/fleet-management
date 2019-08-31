@@ -18,22 +18,6 @@ const guid = function () {
 	});
 }
 
-function isAuthenticated(req) {
-	if (req.isAuthenticated()) {
-		console.log("Logged out.");
-		req.logout();
-		req.session.destroy(function (err) {
-			if (err) {
-				console.log('An error occurred on logout: ' + err);
-			} else {
-				return true;
-			}
-		});
-	} else {
-		return false;
-	}
-}
-
 function ensureDeAuthenticated(req, res, next) {
 	if (!req.isAuthenticated()) {
 		return next();
@@ -42,8 +26,6 @@ function ensureDeAuthenticated(req, res, next) {
 		req.session.destroy(function (err) {
 			if (err) {
 				console.log('An error occurred on logout: ' + err);
-			} else {
-				return true;
 			}
 		});
 		res.redirect('/users/login');
