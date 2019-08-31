@@ -4,6 +4,7 @@ var objectId = require('mongodb').ObjectID;
 var Vehicle = require('../models/vehicle');
 var Driver = require('../models/driver');
 var usersRoute = require('./usersRoute.js');
+var ensureAuthenticated = require('../utils/authentication').ensureAuthenticated;
 
 // Get vehicles
 router.get('/', ensureAuthenticated, function (req, res) {
@@ -221,14 +222,5 @@ router.post('/trips/create', function (req, res) {
 		res.redirect('/vehicles');
 	});
 });
-
-function ensureAuthenticated(req, res, next) {
-	if (req.isAuthenticated()) {
-		return next();
-	} else {
-		req.flash('error_msg', 'You are not logged in');
-		res.redirect('/users/login');
-	}
-}
 
 module.exports = router;

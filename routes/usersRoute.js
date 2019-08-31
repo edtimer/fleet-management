@@ -2,13 +2,15 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-const nodemailer = require("nodemailer");
-const fs = require('fs');
 var User = require('../models/user');
-var cookiesig = require('cookie-signature');
 var userId;
 var objectId = require('mongodb').ObjectID;
-const requestLimit = 30;	// TODO
+
+var sendEmail = require('../utils/emailDispatcher').sendEmail;
+var ensureDeAuthenticated = require('../utils/authentication').ensureDeAuthenticated;
+
+// var cookiesig = require('cookie-signature');
+// const requestLimit = 30;	// TODO
 
 // Function to generate 36 character string
 const guid = function () {
@@ -16,20 +18,6 @@ const guid = function () {
 		var r = Math.random() * 16 | 0, v = c == 'x' ? r : r & 0x3 | 0x8;
 		return v.toString(16);
 	});
-}
-
-function ensureDeAuthenticated(req, res, next) {
-	if (!req.isAuthenticated()) {
-		return next();
-	} else {
-		req.logout();
-		req.session.destroy(function (err) {
-			if (err) {
-				console.log('An error occurred on logout: ' + err);
-			}
-		});
-		res.redirect('/users/login');
-	}
 }
 
 // Register
@@ -162,22 +150,23 @@ router.post('/reset-password', function (req, res) {
 					return res.redirect('/users/login');
 				}
 
-				User.findOneAndUpdate({ token: token, username: username }, updateUser, { upsert: false }).exec().then((updatedUser) => {
-					console.log("Updated user:");
-					console.log(updatedUser);
+				User.findOneAndUpdate({ token: token, username: username }, updateUser, { upsert: false })
+					.exec().then((updatedUser) => {
+						console.log("Updated user:");
+						console.log(updatedUser);
 
-					if (updateUser) {
-						req.flash('success_msg', "You can now log into your recovered account.")
+						if (updateUser) {
+							req.flash('success_msg', "You can now log into your recovered account.")
+							return res.redirect('/users/login');
+						} else {
+							req.flash('error_msg', 'No user found. Please try again.');
+							return res.redirect('/users/login');
+						}
+					}).catch((err) => {
+						console.log("No user found by token.");
+						req.flash('error_msg', 'An error occurred.');
 						return res.redirect('/users/login');
-					} else {
-						req.flash('error_msg', 'No user found. Please try again.');
-						return res.redirect('/users/login');
-					}
-				}).catch((err) => {
-					console.log("No user found by token.");
-					req.flash('error_msg', 'An error occurred.');
-					return res.redirect('/users/login');
-				});
+					});
 			});
 		} else {
 			console.log("Wrong token.");
@@ -266,13 +255,19 @@ router.post('/recover-account', function (req, res) {
 					return res.redirect('/users/login');
 				});
 
-				sendEmail(recipient, subject, html).then(response => {
+				sendEmail(null, recipient, subject, html).then(response => {
 					console.log("SMTP response:");
 					console.log(response);
 				}, error => {
 					console.log("SMTP error:");
 					console.log(error);
-				}).catch(console.error);
+					req.flash('error_msg', 'An error occurred.');
+					return res.redirect('/users/login');
+				}).catch((err) => {
+					console.log("Error: Contact message was not sent.");
+					req.flash('error_msg', 'An error occurred. Message was not sent.');
+					return res.redirect('/users/login');
+				});
 
 				let confirmMessage = 'We sent you an email to ' + recipient + ' in order to reset your password.';
 				req.flash('success_msg', confirmMessage);
@@ -299,6 +294,8 @@ passport.use(new LocalStrategy(
 				if (isMatch) {
 					userId = user._id;
 					module.exports.userId = userId;
+					module.exports.userEmail = user.email;
+					module.exports.userName = user.name;
 					return done(null, user);
 				} else {
 					return done(null, false, { message: 'Invalid password' });
@@ -334,50 +331,6 @@ router.get('/logout', function (req, res) {
 		res.redirect('/users/login');
 	});
 });
-
-// async..await is not allowed in global scope, must use a wrapper
-async function sendEmail(recipient, subject, htmlMsg) {
-	const smtpConfig = {
-		host: 'smtp.gmail.com',
-		port: 465,
-		secure: true, // use SSL
-		auth: {
-			user: 'my.web.dev.user@gmail.com',
-			pass: 'S4f3_p4ssw0rD'
-		},
-		tls: {
-			rejectUnauthorized: false
-		},
-		disableFileAccess: true,
-		// path: '/path',
-		// method: 'GET',
-		key: fs.readFileSync('./certificate/key.key'),
-		cert: fs.readFileSync('./certificate/certificate.crt'),
-		ca: await fs.promises.readFile("./certificate/ca-cert.pem")
-	};
-
-	// Turn on: https://myaccount.google.com/lessecureapps
-
-	// create reusable transporter object using the default SMTP transport
-	let transporter = nodemailer.createTransport(smtpConfig);
-
-	// send mail with defined transport object
-	let info = await transporter.sendMail({
-		from: '"Fleet Management 🚗" <my.web.dev.user@gmail.com>', // sender address
-		to: recipient, // list of receivers
-		subject: subject, // Subject line
-		html: htmlMsg
-	}, function (error, response) {
-		if (error) {
-			console.log("Error in SMTP:")
-			console.log(error);
-		} else {
-			console.log("Message sent.");
-		}
-	});
-
-	return "Ok";
-}
 
 function parseValidationErrors(errors) {
 	let msg = "";

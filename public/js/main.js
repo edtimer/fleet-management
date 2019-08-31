@@ -35,6 +35,8 @@ $(document).ready(function () {
 		$("#login").addClass("active");
 	} else if (currentPathname == "/users/register") {
 		$("#register").addClass("active");
+	} else if (currentPathname == "/contact") {
+		$("#contact").addClass("active");
 	}
 
 	/*
