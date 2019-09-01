@@ -31,6 +31,7 @@ var fs = require('fs');
 
 // Helmet Middleware to secure HTTP headers
 app.use(helmet());
+app.disable('x-powered-by');
 
 var dbUrl = 'mongodb://test:testPassword2017@ds141351.mlab.com:41351/mlab-db';
 // var dbUrl = 'mongodb://localhost/fleetmanagement';
