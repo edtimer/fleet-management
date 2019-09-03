@@ -64,8 +64,6 @@ $(document).ready(function () {
 					} else {
 						registerSubmitButton.disabled = true;
 					}
-				} else {
-					registerSubmitButton.disabled = false;
 				}
 			} else {
 				registerSubmitButton.disabled = true;
@@ -116,9 +114,9 @@ $(document).ready(function () {
 		});
 
 		// When the user clicks outside of the password field, hide the message box
-		registerPassword.blur(function () {
-			registerMessage.style.display = "none";
-		});
+		// registerPassword.blur(function () {
+		// 	registerMessage.style.display = "none";
+		// });
 
 		// When the user starts to type something inside the password field
 		registerPassword.keyup(function () {
@@ -187,9 +185,9 @@ $(document).ready(function () {
 			registerMessage.style.display = "block";
 		});
 
-		registerPassword2.blur(function () {
-			registerMessage.style.display = "none";
-		});
+		// registerPassword2.blur(function () {
+		// 	registerMessage.style.display = "none";
+		// });
 
 		registerPassword2.keyup(function () {
 			checkRegistrationFormValidity();
