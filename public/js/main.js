@@ -64,6 +64,8 @@ $(document).ready(function () {
 					} else {
 						registerSubmitButton.disabled = true;
 					}
+				} else {
+					registerSubmitButton.disabled = false;
 				}
 			} else {
 				registerSubmitButton.disabled = true;
