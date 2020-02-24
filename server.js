@@ -8,7 +8,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var exphbs = require('express-handlebars');
-var expressValidator = require('express-validator');
+// var expressValidator = require('express-validator');
 var flash = require('connect-flash');
 var session = require('express-session');
 var passport = require('passport');
@@ -158,7 +158,7 @@ app.use(session({
 // TODO: make cookie secure in production
 
 // Express Validator
-app.use(expressValidator());
+// app.use(expressValidator());
 
 // Passport init
 app.use(passport.initialize());
@@ -192,9 +192,9 @@ app.use('/contact', contactRoute);
 // process.env.PORT is related to deploying on heroku
 var server = app.listen(process.env.PORT || 3000, listen);
 
-// if (process.env.OS == 'Windows_NT') {
-//   require('child_process').spawn('explorer', ['http://localhost:3000']);
-// }
+if (process.env.OS == 'Windows_NT') {
+  require('child_process').spawn('explorer', ['http://localhost:3000']);
+}
 
 // This call back just tells us that the server has started
 function listen() {
